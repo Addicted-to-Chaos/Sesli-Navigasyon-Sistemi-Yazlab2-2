@@ -1,43 +1,62 @@
 package com.example.yazlabnav
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.yazlabnav.ui.theme.YazlabNavTheme
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import java.util.ArrayList
+import java.util.Locale
 
-class MainActivity : ComponentActivity() {
+@Suppress("DEPRECATION")
+class MainActivity : AppCompatActivity() {
+
+    private val RQ_SPEECH_REC = 102
+    private lateinit var basKonusButon: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            YazlabNavTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
-                }
-            }
+        setContentView(R.layout.activity_main)
+        enableEdgeToEdge()
+
+        basKonusButon = findViewById(R.id.basKonusButton)
+        basKonusButon.setOnClickListener {
+            askSpeechInput()
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-            text = "Hello $name!",
-            modifier = modifier
-    )
-}
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    YazlabNavTheme {
-        Greeting("Android")
+        if (requestCode == RQ_SPEECH_REC && resultCode == Activity.RESULT_OK) {
+            val result: ArrayList<String>? = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            val basKonusTextView: TextView = findViewById(R.id.basKonusTextView)
+            basKonusTextView.text = result?.get(0).toString()
+        }
+    }
+
+    private fun askSpeechInput() {
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            Toast.makeText(this, "Konuşma tanıma özelliği erişilebilir değil.", Toast.LENGTH_SHORT).show()
+        } else {
+            val i = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+            i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Konuşunuz.")
+            startActivityForResult(i, RQ_SPEECH_REC)
+        }
     }
 }
