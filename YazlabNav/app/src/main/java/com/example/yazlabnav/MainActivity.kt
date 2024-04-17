@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -20,14 +21,15 @@ class MainActivity : AppCompatActivity() {
 
     private val RQ_SPEECH_REC = 102
     private lateinit var basKonusButon: Button
+    private lateinit var basKonusButon2: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         enableEdgeToEdge()
 
-        basKonusButon = findViewById(R.id.basKonusButton)
-        basKonusButon.setOnClickListener {
+        basKonusButon2 = findViewById(R.id.basKonusButton2)
+        basKonusButon2.setOnClickListener {
             askSpeechInput()
         }
 
