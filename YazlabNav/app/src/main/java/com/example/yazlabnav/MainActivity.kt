@@ -22,11 +22,19 @@ class MainActivity : AppCompatActivity() {
     private val RQ_SPEECH_REC = 102
     private lateinit var basKonusButon: Button
     private lateinit var basKonusButon2: ImageView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         enableEdgeToEdge()
+
+        val mapeGecisButon: Button?= findViewById(R.id.denemee)
+
+
+
+        mapeGecisButon?.setOnClickListener {
+            val intent=Intent(this, Harita::class.java)
+            startActivity(intent)
+        }
 
         basKonusButon2 = findViewById(R.id.basKonusButton2)
         basKonusButon2.setOnClickListener {
