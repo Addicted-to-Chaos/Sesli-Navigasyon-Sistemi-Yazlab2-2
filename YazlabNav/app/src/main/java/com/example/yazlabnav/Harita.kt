@@ -32,9 +32,8 @@ class Harita : AppCompatActivity(), OnMapReadyCallback {
 
     private var mGoogleMap:GoogleMap?=null
     private lateinit var autocompleteFragment:AutocompleteSupportFragment
-    private val FINE_PERMISSION_CODE: Int = 1
-    var currentLocation: Location? = null
-    var fusedLocationProviderClient: FusedLocationProviderClient? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -47,6 +46,7 @@ class Harita : AppCompatActivity(), OnMapReadyCallback {
         }
         Places.initialize(applicationContext,"AIzaSyA_EgLyHP5svhK0Vh1g8-zhP-EbkrED_q0")
         autocompleteFragment=supportFragmentManager.findFragmentById((R.id.autocomplete_fragment)) as AutocompleteSupportFragment
+
         autocompleteFragment.setPlaceFields(listOf(Place.Field.ID,Place.Field.ADDRESS,Place.Field.LAT_LNG))
         autocompleteFragment.setOnPlaceSelectedListener(object:PlaceSelectionListener{
             override fun onError(p0: Status) {
@@ -65,9 +65,15 @@ class Harita : AppCompatActivity(), OnMapReadyCallback {
         })
         val mapFragment=supportFragmentManager.findFragmentById(R.id.haritaFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        //current location
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        getLastLocation()
+
+        // Konum sağlayıcıyı başlat
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // Kullanıcıdan konum izni iste
+        requestLocationPermission()
+
+
+
     }
 private fun zoomOnMap(latLng: LatLng){
     val newLatLngZoom=CameraUpdateFactory.newLatLngZoom(latLng,12f)
@@ -92,12 +98,7 @@ private fun zoomOnMap(latLng: LatLng){
             .title("Custom Marker")
             .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_marker))
         )
-        currentLocation?.let { location ->
-            val sydney = LatLng(location.latitude, location.longitude)
-            mGoogleMap?.addMarker(MarkerOptions().position(sydney).title("My location"))
-            mGoogleMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-        }
-
+        getCurrentLocation()
     }
     private fun addMarker(position:LatLng): Marker
     {
@@ -107,38 +108,79 @@ private fun zoomOnMap(latLng: LatLng){
         )
         return marker!!
     }
-    private fun getLastLocation() {
-         if(ActivityCompat.checkSelfPermission(
-                this,android.Manifest.permission.ACCESS_FINE_LOCATION)!=
-            PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this, android.Manifest.permission.ACCESS_COARSE_LOCATION)!=
-            PackageManager.PERMISSION_GRANTED){
-             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), FINE_PERMISSION_CODE)
-            return
-        }
-        val task: Task<Location> = fusedLocationProviderClient!!.lastLocation
-            fusedLocationProviderClient!!.lastLocation
-        task.addOnSuccessListener { location ->
-            if (location != null) {
-                currentLocation = location
-                val mapFragment=supportFragmentManager.findFragmentById(R.id.haritaFragment) as SupportMapFragment
-                mapFragment.getMapAsync {
-                    // Harita hazır olduğunda yapılacak işlemler buraya yazılabilir
-                }
-            }
-        }
 
-    }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == FINE_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation()
-            } else {
-                Toast.makeText(this, "Konum Erişimi Reddedildi.", Toast.LENGTH_SHORT).show()
-            }
+    private fun requestLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                PERMISSION_REQUEST_LOCATION
+            )
+            return
+        } else {
+            // İzin zaten verilmişse, mevcut konumu al
+            getCurrentLocation()
         }
     }
+
+    private fun getCurrentLocation() {
+        try {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        val currentLatLng = LatLng(it.latitude, it.longitude)
+                        addMarker(currentLatLng)
+                        zoomOnMap(currentLatLng)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        this@Harita,
+                        "Konum alınamadı: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        } catch (securityException: SecurityException) {
+            Toast.makeText(
+                this@Harita,
+                "Konum izni reddedildi.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_LOCATION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Konum izni verildi, mevcut konumu al
+                getCurrentLocation()
+            } else {
+                Toast.makeText(
+                    this@Harita,
+                    "Konum izni reddedildi.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }}
+    companion object {
+        private const val PERMISSION_REQUEST_LOCATION = 100
+    }
+
 
 
 
