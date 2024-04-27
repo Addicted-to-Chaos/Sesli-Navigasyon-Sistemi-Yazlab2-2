@@ -4,9 +4,10 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
@@ -22,7 +23,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
@@ -104,7 +104,7 @@ private fun zoomOnMap(latLng: LatLng){
     {
         val marker=mGoogleMap?.addMarker(MarkerOptions()
             .position(position)
-            .title("Marker")
+            .title("Buradasın")
         )
         return marker!!
     }
@@ -181,7 +181,36 @@ private fun zoomOnMap(latLng: LatLng){
         private const val PERMISSION_REQUEST_LOCATION = 100
     }
 
+//region Harita tipi seçmek için
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_harita,menu)
+        return true
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id=item.itemId
+
+        if(id == R.id.normalMap){
+         mGoogleMap?.mapType=GoogleMap.MAP_TYPE_NORMAL
+        }
+
+        if(id == R.id.hibritMap){
+            mGoogleMap?.mapType=GoogleMap.MAP_TYPE_HYBRID
+        }
+
+        if(id == R.id.fizikselMap){
+            mGoogleMap?.mapType=GoogleMap.MAP_TYPE_TERRAIN
+        }
+
+        if(id == R.id.uyduHarita){
+            mGoogleMap?.mapType=GoogleMap.MAP_TYPE_SATELLITE
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+//endregion
 
 
 }

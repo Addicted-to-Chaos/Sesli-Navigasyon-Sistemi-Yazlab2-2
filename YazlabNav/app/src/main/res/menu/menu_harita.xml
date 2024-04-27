@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/normalMap"
+    android:title="Standart" />
+
+    <item
+        android:id="@+id/uyduHarita"
+        android:title="Uydu Görüntüsü" />
+    <item
+        android:id="@+id/hibritMap"
+        android:title="Hibrit" />
+    <item
+        android:id="@+id/fizikselMap"
+        android:title="Fiziksel" />
+</menu>
