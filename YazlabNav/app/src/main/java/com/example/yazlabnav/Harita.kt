@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -32,9 +33,10 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import java.util.Locale
 
 
-class Harita : AppCompatActivity(), OnMapReadyCallback {
+class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListener {
 
     private var mGoogleMap:GoogleMap?=null
     private lateinit var autocompleteFragment:AutocompleteSupportFragment
@@ -44,6 +46,9 @@ class Harita : AppCompatActivity(), OnMapReadyCallback {
     var endLat:Double=0.0
     var startLng:Double=0.0
     var endLng:Double=0.0
+
+
+    private var textToSpeech: TextToSpeech? = null
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +67,7 @@ class Harita : AppCompatActivity(), OnMapReadyCallback {
         autocompleteFragment.setPlaceFields(listOf(Place.Field.ID,Place.Field.ADDRESS,Place.Field.LAT_LNG))
         autocompleteFragment.setOnPlaceSelectedListener(object:PlaceSelectionListener{
             override fun onError(p0: Status) {
-                Toast.makeText(this@Harita,"Ararken Hata Oluştu!",Toast.LENGTH_SHORT).show()
+                showToastAndSpeak("Ararken bir sorun oluştu!")
             }
 
             override fun onPlaceSelected(place: Place) {
@@ -90,30 +95,21 @@ class Harita : AppCompatActivity(), OnMapReadyCallback {
         rotaButton.setOnClickListener {
             if(endLat==0.0){
 
-                Toast.makeText(
-                    this@Harita,
-                    "Lütfen gidilecek lokasyon seçiniz.",
-                    Toast.LENGTH_SHORT
-                ).show()
+               showToastAndSpeak("Lütfen gidilecek lokasyonu seçiniz.")
+
             }
             else{
-                if(endLat==startLat && startLng==endLng){
-                    Toast.makeText(
-                        this@Harita,
-                        "Gitmek istediğiniz konum şuan ki konumunuzla aynıdır. Lütfen başka bir konum seçiniz.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                else{
-                    getDirections(endLat,endLng)
-                }
+                getDirections(endLat,endLng)
+
             }
         }
         //endregion
 
-
+        textToSpeech = TextToSpeech(this, this)
     }
-private fun zoomOnMap(latLng: LatLng){
+
+
+    private fun zoomOnMap(latLng: LatLng){
     val newLatLngZoom=CameraUpdateFactory.newLatLngZoom(latLng,12f)
     mGoogleMap?.animateCamera(newLatLngZoom)
 }
@@ -184,18 +180,10 @@ private fun zoomOnMap(latLng: LatLng){
                     }
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(
-                        this@Harita,
-                        "Konum alınamadı: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToastAndSpeak("Konum alınamadı.")
                 }
         } catch (securityException: SecurityException) {
-            Toast.makeText(
-                this@Harita,
-                "Konum izni reddedildi.",
-                Toast.LENGTH_SHORT
-            ).show()
+            showToastAndSpeak("Konum izni reddedildi.")
         }
     }
 
@@ -210,11 +198,7 @@ private fun zoomOnMap(latLng: LatLng){
                 // Konum izni verildi, mevcut konumu al
                 getCurrentLocation()
             } else {
-                Toast.makeText(
-                    this@Harita,
-                    "Konum izni reddedildi.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                showToastAndSpeak("Konum izni reddedildi.")
             }
         }}
     companion object {
@@ -251,8 +235,7 @@ private fun zoomOnMap(latLng: LatLng){
     }
 
 //endregion
-
-    //region Rota oluşturmak için
+// region Rota oluşturmak için
 
     private fun getDirections( endLat: Double, endLng: Double) {
         try {
@@ -270,7 +253,33 @@ private fun zoomOnMap(latLng: LatLng){
         }
     }
 
+    //endregion
 
+    //region Kullanıcılar için TextToSpeech
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            // Dil değiştirmek isterseniz alttaki tr yi başka dil koduyla değiştirin //Kaan
+            val result = textToSpeech?.setLanguage(Locale("tr"))
+
+            if (result == TextToSpeech.LANG_MISSING_DATA ||
+                result == TextToSpeech.LANG_NOT_SUPPORTED
+            ) {
+                Toast.makeText(this, "Bu dil desteklenmiyor.", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "TextToSpeech başlatılamadı.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun speak(text: String) {
+        textToSpeech?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+// showToastAndSpeak metodunu ekrana yazı yazdırken kullanın. hem sesli de söyleyecektir //Kaan
+    private fun showToastAndSpeak(message: String) {
+        Toast.makeText(this@Harita, message, Toast.LENGTH_LONG).show()
+        speak(message)
+    }
     //endregion
 
 }
