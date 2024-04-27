@@ -50,6 +50,8 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
 
     private var textToSpeech: TextToSpeech? = null
 
+    private var previousMarker: Marker? = null
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,12 +76,17 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
                 val add=place.address
                 val id=place.id
                 val latLng=place.latLng!!
+
+                previousMarker?.remove()
+
                 val marker=addMarker(latLng)
                 marker.title="$add"
                 marker.snippet="$id"
                 zoomOnMap(latLng)
                 endLat=place.latLng.latitude
                 endLng=place.latLng.longitude
+
+                previousMarker = marker
             }
         })
         val mapFragment=supportFragmentManager.findFragmentById(R.id.haritaFragment) as SupportMapFragment
@@ -100,7 +107,6 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
             }
             else{
                 getDirections(endLat,endLng)
-
             }
         }
         //endregion
@@ -140,8 +146,7 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
             .position(position)
             .title("Buradasın")
         )
-        startLat=position.latitude
-        startLng=position.longitude
+
         return marker!!
     }
 
@@ -177,6 +182,8 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
                         val currentLatLng = LatLng(it.latitude, it.longitude)
                         addMarker(currentLatLng)
                         zoomOnMap(currentLatLng)
+                        startLat=location.latitude
+                        startLng=location.longitude
                     }
                 }
                 .addOnFailureListener { e ->
