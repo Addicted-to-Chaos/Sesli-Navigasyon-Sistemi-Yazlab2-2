@@ -107,6 +107,7 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
                 newPolyline.color = Color.GREEN
                 newPolyline.jointType = JointType.ROUND
                 previousPolyline = newPolyline
+                showToastAndSpeak("Yol bulundu rota oluşturulmaya hazır.")
 //endregion aa
                 previousMarker = marker
             }
