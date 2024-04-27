@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
@@ -26,9 +27,13 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.RoundCap
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
@@ -51,6 +56,7 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
     private var textToSpeech: TextToSpeech? = null
 
     private var previousMarker: Marker? = null
+    private var previousPolyline: Polyline? = null
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,19 +79,35 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
             }
 
             override fun onPlaceSelected(place: Place) {
-                val add=place.address
-                val id=place.id
-                val latLng=place.latLng!!
+                val add = place.address
+                val id = place.id
+                val latLng = place.latLng!!
 
                 previousMarker?.remove()
+                previousPolyline?.remove()
 
-                val marker=addMarker(latLng)
-                marker.title="$add"
-                marker.snippet="$id"
+                val marker = addMarker(latLng)
+                marker.title = "$add"
+                marker.snippet = "$id"
                 zoomOnMap(latLng)
-                endLat=place.latLng.latitude
-                endLng=place.latLng.longitude
+                endLat = place.latLng.latitude
+                endLng = place.latLng.longitude
 
+                //region aa
+                val newPolyline: Polyline? = mGoogleMap?.addPolyline(
+                    PolylineOptions()
+                        .clickable(true)
+                        .add(
+                            LatLng(startLat, startLng),
+                            LatLng(endLat, endLng)
+                        )
+                )
+                newPolyline!!.endCap = RoundCap()
+                newPolyline.width = 12f
+                newPolyline.color = Color.GREEN
+                newPolyline.jointType = JointType.ROUND
+                previousPolyline = newPolyline
+//endregion aa
                 previousMarker = marker
             }
         })
