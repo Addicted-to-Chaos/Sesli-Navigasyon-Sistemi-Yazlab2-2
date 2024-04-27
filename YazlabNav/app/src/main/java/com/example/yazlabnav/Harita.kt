@@ -1,11 +1,16 @@
 package com.example.yazlabnav
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -28,12 +33,19 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 
+
 class Harita : AppCompatActivity(), OnMapReadyCallback {
 
     private var mGoogleMap:GoogleMap?=null
     private lateinit var autocompleteFragment:AutocompleteSupportFragment
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    var startLat:Double=0.0
+    var endLat:Double=0.0
+    var startLng:Double=0.0
+    var endLng:Double=0.0
+
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -61,17 +73,43 @@ class Harita : AppCompatActivity(), OnMapReadyCallback {
                 marker.title="$add"
                 marker.snippet="$id"
                 zoomOnMap(latLng)
+                endLat=place.latLng.latitude
+                endLng=place.latLng.longitude
             }
         })
         val mapFragment=supportFragmentManager.findFragmentById(R.id.haritaFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        // Konum sağlayıcıyı başlat
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // Kullanıcıdan konum izni iste
         requestLocationPermission()
 
+        //region rota için
+        var rotaButton: Button = findViewById(R.id.rotaOlustur)
+        rotaButton.setOnClickListener {
+            if(endLat==0.0){
+
+                Toast.makeText(
+                    this@Harita,
+                    "Lütfen gidilecek lokasyon seçiniz.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            else{
+                if(endLat==startLat && startLng==endLng){
+                    Toast.makeText(
+                        this@Harita,
+                        "Gitmek istediğiniz konum şuan ki konumunuzla aynıdır. Lütfen başka bir konum seçiniz.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                else{
+                    getDirections(endLat,endLng)
+                }
+            }
+        }
+        //endregion
 
 
     }
@@ -106,6 +144,8 @@ private fun zoomOnMap(latLng: LatLng){
             .position(position)
             .title("Buradasın")
         )
+        startLat=position.latitude
+        startLng=position.longitude
         return marker!!
     }
 
@@ -212,5 +252,25 @@ private fun zoomOnMap(latLng: LatLng){
 
 //endregion
 
+    //region Rota oluşturmak için
+
+    private fun getDirections( endLat: Double, endLng: Double) {
+        try {
+
+            val uri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=$endLat,$endLng")
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            intent.setPackage("com.google.android.apps.maps")
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            val uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.maps")
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
+    }
+
+
+    //endregion
 
 }
