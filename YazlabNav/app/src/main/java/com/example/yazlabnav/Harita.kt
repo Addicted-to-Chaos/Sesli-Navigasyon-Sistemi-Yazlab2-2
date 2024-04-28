@@ -2,6 +2,7 @@ package com.example.yazlabnav
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,10 +10,15 @@ import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +44,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import java.util.ArrayList
 import java.util.Locale
 
 
@@ -57,6 +64,11 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
 
     private var previousMarker: Marker? = null
     private var previousPolyline: Polyline? = null
+
+    //region baskonuş
+    private val RQ_SPEECH_REC = 102
+    private lateinit var basKonusButon: ImageButton
+    //endregion
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,7 +147,37 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
         //endregion
 
         textToSpeech = TextToSpeech(this, this)
+        basKonusButon = findViewById(R.id.basKonusMap)
+        basKonusButon.setOnClickListener {
+            askSpeechInput()
+        }
+
     }
+
+    //region baskonuş metod
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RQ_SPEECH_REC && resultCode == Activity.RESULT_OK) {
+            val result: ArrayList<String>? = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            val basKonusTextView: AutocompleteSupportFragment = supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
+            basKonusTextView.setText(result?.get(0).toString())
+
+        }
+    }
+
+    private fun askSpeechInput() {
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            Toast.makeText(this, "Konuşma tanıma özelliği erişilebilir değil.", Toast.LENGTH_SHORT).show()
+        } else {
+            val i = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+            i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Konuşunuz.")
+            startActivityForResult(i, RQ_SPEECH_REC)
+        }
+    }
+    //endregion
 
 
     private fun zoomOnMap(latLng: LatLng){
