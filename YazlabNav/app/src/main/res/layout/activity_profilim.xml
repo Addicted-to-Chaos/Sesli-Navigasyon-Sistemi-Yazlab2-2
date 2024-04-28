@@ -4,69 +4,119 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
+    android:background="#EDF7FF"
     android:layout_height="match_parent"
     tools:context=".Profilim">
 
 
     <TextView
         android:id="@+id/adText"
-        android:layout_width="208dp"
-        android:layout_height="71dp"
-        android:text="Profilim"
+        android:layout_width="357dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/background_btn2"
+        android:drawableLeft="@drawable/baseline_circle_24"
+        android:text="Kullanıcı Adı"
+        android:textColor="@color/black"
+        android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.078"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.216" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        app:layout_constraintVertical_bias="0.112" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:fontFamily="@font/lovelo2"
         android:text="PROFİLİM"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/black"
+        android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.071" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/adGuncelle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="95dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="116dp"
+        android:background="@drawable/background_btn"
         android:text="Güncelle"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toEndOf="@+id/adText"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.228" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adText" />
 
     <TextView
         android:id="@+id/githubBilgi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="306dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="132dp"
         android:text="Projeye @Addicted-to-Chaos hesabından erişebilirsiniz."
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.676"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.951" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        app:layout_constraintVertical_bias="0.678" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="500dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="25dp"
+        android:background="#285F74"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.606"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="500dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="48dp"
+        android:background="#285F74"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adGuncelle" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="KULLANICI ADI"
-        android:textSize="24sp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/lovelo2"
+        android:text="KULLANICI ADINIZ"
+        android:textColor="@color/black"
+        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/adText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.14"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <ImageView
+        android:id="@+id/geritusu_profil"
+        android:layout_width="57dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintEnd_toStartOf="@+id/textView2"
+        app:layout_constraintHorizontal_bias="0.363"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.909" />
+        app:srcCompat="@drawable/geritusu" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
