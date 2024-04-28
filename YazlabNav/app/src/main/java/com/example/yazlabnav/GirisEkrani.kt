@@ -9,22 +9,23 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputLayout
+import java.util.Locale
 
 
-
-class GirisEkrani : AppCompatActivity() {
+class GirisEkrani : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private lateinit var girisButton: Button
     private lateinit var isimText: TextView
     private lateinit var isimInput: EditText
     private lateinit var textInputLayout: TextInputLayout
 
-    val textToSpeech:TextToSpeech? = null
+    var textToSpeech:TextToSpeech? = null
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +37,7 @@ class GirisEkrani : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        textToSpeech = TextToSpeech(this, this)
         val sharedPref=getSharedPreferences("myPref", MODE_PRIVATE)
         val editor=sharedPref.edit()
 
@@ -44,6 +45,7 @@ class GirisEkrani : AppCompatActivity() {
         isimText=findViewById(R.id.isimText)
         isimInput=findViewById(R.id.textInputİsim)
         textInputLayout=findViewById(R.id.textInputLayoutIsim)
+
 
         if(sharedPref.contains("name") && sharedPref.getString("name",null)?.length!=0){
             isimInput.isEnabled=false
@@ -74,6 +76,20 @@ class GirisEkrani : AppCompatActivity() {
             }
             val intent= Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+    }
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            // Dil değiştirmek isterseniz alttaki tr yi başka dil koduyla değiştirin //Kaan
+            val result = textToSpeech?.setLanguage(Locale("tr"))
+
+            if (result == TextToSpeech.LANG_MISSING_DATA ||
+                result == TextToSpeech.LANG_NOT_SUPPORTED
+            ) {
+                Toast.makeText(this, "Bu dil desteklenmiyor.", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "TextToSpeech başlatılamadı.", Toast.LENGTH_SHORT).show()
         }
     }
 
