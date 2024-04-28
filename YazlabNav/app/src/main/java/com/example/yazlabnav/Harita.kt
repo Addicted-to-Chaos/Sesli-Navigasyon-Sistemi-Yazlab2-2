@@ -149,18 +149,18 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
         //add simple marker
 
         //Draggable marker
-        mGoogleMap?.addMarker(MarkerOptions()
-            .position(LatLng(12.234,12.543))
-            .title("Draggable Marker")
-            .draggable(true)
-        )
+        // mGoogleMap?.addMarker(MarkerOptions()
+           // .position(LatLng(12.234,12.543))
+          //  .title("Draggable Marker")
+         //   .draggable(true)
+        //)
 
         //Custom marker
-        mGoogleMap?.addMarker(MarkerOptions()
-            .position(LatLng(12.987,14.345))
-            .title("Custom Marker")
-            .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_marker))
-        )
+        //mGoogleMap?.addMarker(MarkerOptions()
+           // .position(LatLng(12.987,14.345))
+            //.title("Custom Marker")
+          //  .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_marker))
+        //)
         getCurrentLocation()
     }
     private fun addMarker(position:LatLng): Marker
