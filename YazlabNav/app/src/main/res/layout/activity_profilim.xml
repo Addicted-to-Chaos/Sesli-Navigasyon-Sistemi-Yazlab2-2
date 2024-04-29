@@ -9,7 +9,7 @@
     tools:context=".Profilim">
 
 
-    <TextView
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/adText"
         android:layout_width="357dp"
         android:layout_height="33dp"
@@ -25,7 +25,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.112" />
+        app:layout_constraintVertical_bias="0.112"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <TextView
         android:id="@+id/textView2"

@@ -12,12 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.yazlabnav.R
+import com.google.android.material.textfield.TextInputEditText
 import java.util.Locale
 
 class Profilim : AppCompatActivity() {
 
-    val adText: TextView?= findViewById(R.id.adText)
-    val adGuncellemeButton: Button?= findViewById(R.id.adGuncelle)
+    private lateinit var adText: TextInputEditText
+    private lateinit var adGuncellemeButton: Button
     var textToSpeech:TextToSpeech? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,10 +30,15 @@ class Profilim : AppCompatActivity() {
             insets
         }
 
+        adText = findViewById(R.id.adText)
+        adGuncellemeButton = findViewById(R.id.adGuncelle)
         val sharedPref=getSharedPreferences("myPref", MODE_PRIVATE)
         val editor=sharedPref.edit()
+        val name: String? = sharedPref.getString("name",null)
 
-            adText?.text=sharedPref.getString("name",null)
+        name?.let {
+            adText?.setText(it)
+        }
 
         adGuncellemeButton?.setOnClickListener {
             editor.apply{
