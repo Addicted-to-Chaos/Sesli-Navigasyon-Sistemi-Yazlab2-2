@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -49,6 +50,10 @@ class Profilim : AppCompatActivity() {
             Toast.makeText(this, "Kullanıcı adı başarıyla güncellendi.", Toast.LENGTH_SHORT).show()
 
         }
+        val geriTusProfilim = findViewById<ImageButton>(R.id.geritusu_profil)
+        geriTusProfilim.setOnClickListener {
+            geriButtonProfilim()
+        }
 
     }
 
@@ -65,6 +70,10 @@ class Profilim : AppCompatActivity() {
         } else {
             Toast.makeText(this, "TextToSpeech başlatılamadı.", Toast.LENGTH_SHORT).show()
         }
+    }
+    private fun geriButtonProfilim() {
+        val geriTusProfilim = Intent(this, MainActivity::class.java)
+        startActivity(geriTusProfilim)
     }
 
 

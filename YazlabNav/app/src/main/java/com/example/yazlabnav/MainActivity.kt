@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -44,6 +45,15 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val geriTusMain = findViewById<ImageButton>(R.id.geritusu_menu)
+        geriTusMain.setOnClickListener {
+            geriButtonMain()
+        }
+
+    }
+    private fun geriButtonMain() {
+        val geriTusMain = Intent(this, GirisEkrani::class.java)
+        startActivity(geriTusMain)
     }
 
 

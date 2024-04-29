@@ -151,6 +151,10 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
         basKonusButon.setOnClickListener {
             askSpeechInput()
         }
+        val geritusu = findViewById<ImageButton>(R.id.geritusu_harita)
+        geritusu.setOnClickListener {
+            geriButton()
+        }
 
     }
 
@@ -353,5 +357,7 @@ class Harita : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListe
         speak(message)
     }
     //endregion
-
-}
+    private fun geriButton() {
+        val geriTus = Intent(this, MainActivity::class.java)
+        startActivity(geriTus)
+}}

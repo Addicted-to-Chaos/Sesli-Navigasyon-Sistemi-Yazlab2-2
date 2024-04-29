@@ -13,11 +13,12 @@
         android:id="@+id/imageView"
         android:layout_width="312dp"
         android:layout_height="262dp"
-        android:layout_marginTop="52dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.098"
         app:srcCompat="@drawable/logo3" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -46,22 +47,24 @@
         android:hint="İsim Giriniz..."
         android:textColor="@color/black"
         android:textColorHint="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textInputLayoutIsim" />
+        app:layout_constraintTop_toTopOf="@+id/textInputLayoutIsim"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/isimText"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginStart="177dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="176dp"
         android:fontFamily="@font/poppins_medium"
         android:text="Hoşgeldin Sueda"
         android:textColor="@color/black"
         android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textInputİsim"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,9 +80,11 @@
         android:text="Uygulamamız seyahatlerinizi daha kolay ve keyifli hale getirmek için tasarlandı. Mikrofona basarak gitmek istediğiniz yeri belirtin ve haritada kolayca rotanızı oluşturun."
         android:textColor="@color/black"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputİsim" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.514" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -87,9 +92,12 @@
         android:layout_height="242dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.718"
         app:srcCompat="@drawable/route2" />
 
     <Button
@@ -98,14 +106,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="144dp"
         android:background="@drawable/background_btn"
         android:text="DEVAM ET"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.856" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
