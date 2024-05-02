@@ -7,33 +7,37 @@
     android:layout_height="match_parent"
     tools:context=".Harita">
 
-
     <fragment
         android:id="@+id/haritaFragment"
-        class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"></fragment>
+        >
+    </fragment>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="280dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="600dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+
         app:cardCornerRadius="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.131"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/haritaFragment"
-        app:layout_constraintVertical_bias="0.0">
+
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/autocomplete_fragment"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
     </androidx.cardview.widget.CardView>
@@ -46,52 +50,35 @@
         android:text="Rota Oluştur"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.092"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/haritaFragment"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.923" />
+        app:layout_constraintVertical_bias="0.932" />
 
     <ImageButton
         android:id="@+id/basKonusMap"
         android:layout_width="73dp"
         android:layout_height="73dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="640dp"
         android:backgroundTint="@android:color/transparent"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/cardView"
-        app:layout_constraintTop_toTopOf="@+id/haritaFragment"
-        app:layout_constraintVertical_bias="0.002"
+        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintStart_toEndOf="@+id/rotaOlustur"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
         app:srcCompat="@drawable/mic" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/autocomplete_fragment"
-        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/geritusu_harita"
         android:layout_width="56dp"
         android:layout_height="51dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="650dp"
         android:background="@android:color/transparent"
         android:paddingLeft="25dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cardView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/haritaFragment"
-        app:layout_constraintTop_toTopOf="@+id/haritaFragment"
-        app:layout_constraintVertical_bias="0.003"
+        app:layout_constraintEnd_toStartOf="@+id/rotaOlustur"
+        app:layout_constraintHorizontal_bias="0.455"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
         app:srcCompat="@drawable/geritusu" />
 
 
